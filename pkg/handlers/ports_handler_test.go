@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/kinbiko/jsonassert"
+
 	"github.com/gorilla/mux"
 
 	"github.com/powerslider/maritime-ports-service/pkg/handlers"
@@ -31,6 +33,7 @@ var tests = []struct {
 	handlerFunc              func(portsHandler *handlers.PortsHandler) http.HandlerFunc
 	expectedResponse         string
 	expectedResponseFileName string
+	expectedResponseCode     int
 }{
 	{
 		testCaseName: "should return a correct response for getting all ports",
@@ -39,6 +42,7 @@ var tests = []struct {
 		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
 			return portsHandler.GetAllPorts()
 		},
+		expectedResponseCode:     http.StatusOK,
 		expectedResponseFileName: "get_all_ports_expected_response",
 	},
 	{
@@ -65,6 +69,7 @@ var tests = []struct {
 		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
 			return portsHandler.CreateOrUpdatePort()
 		},
+		expectedResponseCode: http.StatusOK,
 		expectedResponse: `
 		{
 			"success": true,
@@ -85,6 +90,7 @@ var tests = []struct {
 			"city": "London",
 			"country": "United Kingdom"
 		}`,
+		expectedResponseCode: http.StatusOK,
 		expectedResponse: `
 		{
 			"success": true,
@@ -102,6 +108,7 @@ var tests = []struct {
 		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
 			return portsHandler.GetPort()
 		},
+		expectedResponseCode: http.StatusOK,
 		expectedResponse: `
 		{
 		   "result":{
@@ -124,9 +131,28 @@ var tests = []struct {
 		   }
 		}`,
 	},
+	{
+		testCaseName: "should return a correct response for non existent port",
+		httpMethod:   "GET",
+		httpEndpoint: handlers.EndpointGetPortByID,
+		httpPathParams: map[string]string{
+			"id": "NONEXISTENT",
+		},
+		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+			return portsHandler.GetPort()
+		},
+		expectedResponseCode: http.StatusNotFound,
+		expectedResponse: `
+		{
+		   "status": 404,
+           "error": "port entry with ID 'NONEXISTENT' not found"
+		}`,
+	},
 }
 
 func TestPortsHandlerCorrectResponses(t *testing.T) {
+	ja := jsonassert.New(t)
+
 	for _, test := range tests {
 		portsHandler := setupHandler(t)
 
@@ -149,9 +175,9 @@ func TestPortsHandlerCorrectResponses(t *testing.T) {
 
 		handler.ServeHTTP(rr, req)
 
-		assert.Equal(t, http.StatusOK, rr.Code)
+		assert.Equal(t, test.expectedResponseCode, rr.Code)
 
-		verifyExpectedResponse(t, test.expectedResponse, test.expectedResponseFileName, rr)
+		verifyExpectedResponse(t, ja, test.expectedResponse, test.expectedResponseFileName, rr)
 	}
 }
 
@@ -169,6 +195,7 @@ func setupHandler(t *testing.T) *handlers.PortsHandler {
 
 func verifyExpectedResponse(
 	t *testing.T,
+	ja *jsonassert.Asserter,
 	expectedResponse string,
 	expectedResponseFileName string,
 	respRec *httptest.ResponseRecorder,
@@ -179,14 +206,12 @@ func verifyExpectedResponse(
 		filePath, errFilePath := filepath.Abs(fmt.Sprintf("../../testdata/%s.json", expectedResponseFileName))
 
 		expResp, errFile := os.ReadFile(filePath)
-		if err := errors.Join(errFilePath, errFile); err != nil {
-			t.Errorf("could not read expected response JSON file: %v", err)
-		}
+		require.NoError(t, errors.Join(errFilePath, errFile))
 
 		expected = expResp
 	} else {
 		expected = []byte(expectedResponse)
 	}
 
-	assert.JSONEq(t, string(expected), respRec.Body.String())
+	ja.Assertf(respRec.Body.String(), string(expected))
 }
