@@ -49,7 +49,7 @@ func (h *PortsHandler) GetAllPorts() http.HandlerFunc {
 		if err != nil {
 			badRequestError(
 				rw,
-				pkgErrors.Wrapf(err, "Could not get all ports"),
+				pkgErrors.Wrapf(err, "could not get all ports"),
 			)
 
 			return

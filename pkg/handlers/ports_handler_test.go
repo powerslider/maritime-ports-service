@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var tests = []struct {
+type tests struct {
 	testCaseName             string
 	httpMethod               string
 	httpEndpoint             string
@@ -34,126 +34,128 @@ var tests = []struct {
 	expectedResponse         string
 	expectedResponseFileName string
 	expectedResponseCode     int
-}{
-	{
-		testCaseName: "should return a correct response for getting all ports",
-		httpMethod:   "GET",
-		httpEndpoint: handlers.EndpointGetAllPorts,
-		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
-			return portsHandler.GetAllPorts()
-		},
-		expectedResponseCode:     http.StatusOK,
-		expectedResponseFileName: "get_all_ports_expected_response",
-	},
-	{
-		testCaseName: "should return a correct response for creating a new port",
-		httpMethod:   "POST",
-		httpEndpoint: handlers.EndpointCreateOrUpdatePort,
-		httpRequestBody: `
-		{
-			"id": "NEWPORT",
-			"name": "Newest Port",
-			"coordinates": [
-			  123.321,
-			  43.34
-			],
-			"city": "Some City",
-			"country": "Some Country",
-			"alias": [],
-			"regions": [],
-			"timezone": "My/Timezone",
-			"unlocs": [
-			  "NEWPORT"
-			]
-		}`,
-		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
-			return portsHandler.CreateOrUpdatePort()
-		},
-		expectedResponseCode: http.StatusOK,
-		expectedResponse: `
-		{
-			"success": true,
-			"exists": false,
-			"port_id": "NEWPORT"
-		}`,
-	},
-	{
-		testCaseName: "should return a correct response for updating an existing port",
-		httpMethod:   "POST",
-		httpEndpoint: handlers.EndpointCreateOrUpdatePort,
-		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
-			return portsHandler.CreateOrUpdatePort()
-		},
-		httpRequestBody: `
-		{
-			"id": "AEAJM",
-			"city": "London",
-			"country": "United Kingdom"
-		}`,
-		expectedResponseCode: http.StatusOK,
-		expectedResponse: `
-		{
-			"success": true,
-			"exists": true,
-			"port_id": "AEAJM"
-		}`,
-	},
-	{
-		testCaseName: "should return a correct response for querying an existing port",
-		httpMethod:   "GET",
-		httpEndpoint: handlers.EndpointGetPortByID,
-		httpPathParams: map[string]string{
-			"id": "AEDXB",
-		},
-		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
-			return portsHandler.GetPort()
-		},
-		expectedResponseCode: http.StatusOK,
-		expectedResponse: `
-		{
-		   "result":{
-			  "id":"AEDXB",
-			  "name":"Dubai",
-			  "city":"Dubai",
-			  "country":"United Arab Emirates",
-			  "alias":[],
-			  "regions":[],
-			  "coordinates":[
-				 55.27,
-				 25.25
-			  ],
-			  "province":"Dubayy [Dubai]",
-			  "timezone":"Asia/Dubai",
-			  "unlocs":[
-				 "AEDXB"
-			  ],
-			  "code":"52005"
-		   }
-		}`,
-	},
-	{
-		testCaseName: "should return a correct response for non existent port",
-		httpMethod:   "GET",
-		httpEndpoint: handlers.EndpointGetPortByID,
-		httpPathParams: map[string]string{
-			"id": "NONEXISTENT",
-		},
-		handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
-			return portsHandler.GetPort()
-		},
-		expectedResponseCode: http.StatusNotFound,
-		expectedResponse: `
-		{
-		   "status": 404,
-           "error": "port entry with ID 'NONEXISTENT' not found"
-		}`,
-	},
 }
 
 func TestPortsHandlerCorrectResponses(t *testing.T) {
+	var testData = []tests{
+		{
+			testCaseName: "should return a correct response for getting all ports",
+			httpMethod:   "GET",
+			httpEndpoint: handlers.EndpointGetAllPorts,
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.GetAllPorts()
+			},
+			expectedResponseCode:     http.StatusOK,
+			expectedResponseFileName: "get_all_ports_expected_response",
+		},
+		{
+			testCaseName: "should return a correct response for creating a new port",
+			httpMethod:   "POST",
+			httpEndpoint: handlers.EndpointCreateOrUpdatePort,
+			httpRequestBody: `
+			{
+				"id": "NEWPORT",
+				"name": "Newest Port",
+				"coordinates": [
+				  123.321,
+				  43.34
+				],
+				"city": "Some City",
+				"country": "Some Country",
+				"alias": [],
+				"regions": [],
+				"timezone": "My/Timezone",
+				"unlocs": [
+				  "NEWPORT"
+				]
+			}`,
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.CreateOrUpdatePort()
+			},
+			expectedResponseCode: http.StatusOK,
+			expectedResponse: `
+			{
+				"success": true,
+				"exists": false,
+				"port_id": "NEWPORT"
+			}`,
+		},
+		{
+			testCaseName: "should return a correct response for updating an existing port",
+			httpMethod:   "POST",
+			httpEndpoint: handlers.EndpointCreateOrUpdatePort,
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.CreateOrUpdatePort()
+			},
+			httpRequestBody: `
+			{
+				"id": "AEAJM",
+				"city": "London",
+				"country": "United Kingdom"
+			}`,
+			expectedResponseCode: http.StatusOK,
+			expectedResponse: `
+			{
+				"success": true,
+				"exists": true,
+				"port_id": "AEAJM"
+			}`,
+		},
+		{
+			testCaseName: "should return a correct response for querying an existing port",
+			httpMethod:   "GET",
+			httpEndpoint: handlers.EndpointGetPortByID,
+			httpPathParams: map[string]string{
+				"id": "AEDXB",
+			},
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.GetPort()
+			},
+			expectedResponseCode: http.StatusOK,
+			expectedResponse: `
+			{
+			   "result":{
+				  "id":"AEDXB",
+				  "name":"Dubai",
+				  "city":"Dubai",
+				  "country":"United Arab Emirates",
+				  "alias":[],
+				  "regions":[],
+				  "coordinates":[
+					 55.27,
+					 25.25
+				  ],
+				  "province":"Dubayy [Dubai]",
+				  "timezone":"Asia/Dubai",
+				  "unlocs":[
+					 "AEDXB"
+				  ],
+				  "code":"52005"
+			   }
+			}`,
+		},
+		{
+			testCaseName: "should return a correct response for non existent port",
+			httpMethod:   "GET",
+			httpEndpoint: handlers.EndpointGetPortByID,
+			httpPathParams: map[string]string{
+				"id": "NONEXISTENT",
+			},
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.GetPort()
+			},
+			expectedResponseCode: http.StatusNotFound,
+			expectedResponse: `
+			{
+			   "status": 404,
+			   "error": "port entry with ID 'NONEXISTENT' not found"
+			}`,
+		},
+	}
+
 	ja := jsonassert.New(t)
 
-	for _, test := range tests {
+	for _, test := range testData {
 		portsHandler := setupHandler(t)
 
 		var reqBody io.Reader
