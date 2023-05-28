@@ -9,6 +9,6 @@ type PortsStore interface {
 	// GetAllPorts returns all available ports from type entity.Port.
 	GetAllPorts() ([]*entity.Port, error)
 
-	// GetPortByID returns a entity.Port identified by an available ID.
+	// GetPortByID returns an entity.Port identified by an available ID.
 	GetPortByID(id string) (*entity.Port, error)
 }

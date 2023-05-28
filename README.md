@@ -96,6 +96,12 @@ NOTE
 
 ______________________________________________________________________
 
+## Future Improvements
+
+- Add more tests for negative scenarios.
+- Introduce request and response logging and a `request_id` or `correlation_id` property to allow for easy tracing.
+- Swap in-memory storage for a persistent storage type (RDBMS, Document Store, etc.).
+
 ## License
 
 [MIT](LICENSE)

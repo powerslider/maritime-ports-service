@@ -5,6 +5,7 @@ ifneq ("$(wildcard $(envfile))","")
 endif
 
 GOLANGCI_VERSION:=1.52.2
+SWAG_VERSION:=v1.8.12
 PROJECT_NAME:=maritime-ports-service
 GOPATH_BIN:=$(shell go env GOPATH)/bin
 
@@ -12,7 +13,7 @@ GOPATH_BIN:=$(shell go env GOPATH)/bin
 install:
 	# Install Swag tool for Swagger API documentation generation.
 	go install \
-		github.com/swaggo/swag/cmd/swag@latest
+		github.com/swaggo/swag/cmd/swag@${SWAG_VERSION}
 
 	# Install golangci-lint for go code linting.
 	curl -sSfL \
@@ -44,7 +45,7 @@ cover-test:
 .PHONY: build-server
 build-server:
 	@echo ">>> Building ${PROJECT_NAME} API server..."
-	go build -o bin/server cmd/${PROJECT_NAME}/main.go
+	go build -o bin/${PROJECT_NAME} cmd/${PROJECT_NAME}/main.go
 
 .PHONY: run-server
 run-server:
