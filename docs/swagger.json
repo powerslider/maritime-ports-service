@@ -1,0 +1,139 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for maritime ports data.",
+        "title": "Maritime Ports Service API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Tsvetan Dimitrov",
+            "email": "tsvetan.dimitrov23@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://www.mit.edu/~amini/LICENSE.md"
+        },
+        "version": "1.0"
+    },
+    "host": "0.0.0.0:8080",
+    "basePath": "/",
+    "paths": {
+        "/api/v1/ports": {
+            "get": {
+                "description": "Get all ports stored in the system.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ports"
+                ],
+                "summary": "Get all ports stored in the system.",
+                "responses": {}
+            },
+            "post": {
+                "description": "Create a new port or update an existing one.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ports"
+                ],
+                "summary": "Create a new port or update an existing one.",
+                "parameters": [
+                    {
+                        "description": "Port Entry",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.Port"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/ports/{id}": {
+            "get": {
+                "description": "Get an existing port by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ports"
+                ],
+                "summary": "Get an existing port by ID.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Port ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "entity.Port": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "city": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "country": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "regions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "unlocs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "result": [
+        {
+            "id": "AEAJM",
+            "name": "Ajman",
+            "city": "Ajman",
+            "country": "United Arab Emirates",
+            "alias": [],
+            "regions": [],
+            "coordinates": [
+                55.5136433,
+                25.4052165
+            ],
+            "province": "Ajman",
+            "timezone": "Asia/Dubai",
+            "unlocs": [
+                "AEAJM"
+            ],
+            "code": "52000"
+        },
+        {
+            "id": "AEAUH",
+            "name": "Abu Dhabi",
+            "city": "Abu Dhabi",
+            "country": "United Arab Emirates",
+            "alias": [],
+            "regions": [],
+            "coordinates": [
+                54.37,
+                24.47
+            ],
+            "province": "Abu Z¸aby [Abu Dhabi]",
+            "timezone": "Asia/Dubai",
+            "unlocs": [
+                "AEAUH"
+            ],
+            "code": "52001"
+        },
+        {
+            "id": "AEDXB",
+            "name": "Dubai",
+            "city": "Dubai",
+            "country": "United Arab Emirates",
+            "alias": [],
+            "regions": [],
+            "coordinates": [
+                55.27,
+                25.25
+            ],
+            "province": "Dubayy [Dubai]",
+            "timezone": "Asia/Dubai",
+            "unlocs": [
+                "AEDXB"
+            ],
+            "code": "52005"
+        }
+    ]
+}

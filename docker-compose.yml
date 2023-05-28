@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    image: maritime-ports-service:local
+    container_name: maritime-ports-service
+    env_file:
+      - .env.dist
+    ports:
+      - "8080:8080"
+    networks:
+      - app
+
+networks:
+  app:

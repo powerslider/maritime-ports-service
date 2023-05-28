@@ -1,0 +1,94 @@
+basePath: /
+definitions:
+  entity.Port:
+    properties:
+      alias:
+        items:
+          type: string
+        type: array
+      city:
+        type: string
+      code:
+        type: string
+      coordinates:
+        items:
+          type: number
+        type: array
+      country:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      province:
+        type: string
+      regions:
+        items:
+          type: string
+        type: array
+      timezone:
+        type: string
+      unlocs:
+        items:
+          type: string
+        type: array
+    type: object
+host: 0.0.0.0:8080
+info:
+  contact:
+    email: tsvetan.dimitrov23@gmail.com
+    name: Tsvetan Dimitrov
+  description: API for maritime ports data.
+  license:
+    name: MIT
+    url: https://www.mit.edu/~amini/LICENSE.md
+  termsOfService: http://swagger.io/terms/
+  title: Maritime Ports Service API
+  version: "1.0"
+paths:
+  /api/v1/ports:
+    get:
+      consumes:
+      - application/json
+      description: Get all ports stored in the system.
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all ports stored in the system.
+      tags:
+      - ports
+    post:
+      consumes:
+      - application/json
+      description: Create a new port or update an existing one.
+      parameters:
+      - description: Port Entry
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Port'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new port or update an existing one.
+      tags:
+      - ports
+  /api/v1/ports/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an existing port by ID.
+      parameters:
+      - description: Port ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get an existing port by ID.
+      tags:
+      - ports
+swagger: "2.0"
