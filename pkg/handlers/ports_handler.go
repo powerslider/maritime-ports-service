@@ -143,6 +143,15 @@ func (h *PortsHandler) CreateOrUpdatePort() http.HandlerFunc {
 			return
 		}
 
+		if reqBody.ID == "" {
+			badRequestError(
+				rw,
+				errors.New("required body param 'id' is missing"),
+			)
+
+			return
+		}
+
 		p, exists, err := h.Service.CreateOrUpdatePort(&reqBody)
 		if err != nil {
 			badRequestError(

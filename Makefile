@@ -34,12 +34,12 @@ lint:
 .PHONY: test
 test:
 	@echo ">>> Running Unit Tests..."
-	go test -race ./...
+	go test -v -race ./...
 
 .PHONY: cover-test
 cover-test:
 	@echo ">>> Running Tests with Coverage..."
-	go test -race ./... -coverprofile=coverage.txt -covermode=atomic
+	go test -v -race ./... -coverprofile=coverage.txt -covermode=atomic
 
 .PHONY: build-server
 build-server:

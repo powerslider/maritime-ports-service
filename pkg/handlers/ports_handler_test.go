@@ -156,6 +156,119 @@ func TestPortsHandlerCorrectResponses(t *testing.T) {
 	ja := jsonassert.New(t)
 
 	for _, test := range testData {
+		t.Log(test.testCaseName)
+
+		portsHandler := setupHandler(t)
+
+		var reqBody io.Reader
+
+		if len(test.httpRequestBody) > 0 {
+			reqBody = bytes.NewBuffer([]byte(test.httpRequestBody))
+		}
+
+		req, errReq := http.NewRequest(test.httpMethod, test.httpEndpoint, reqBody)
+		require.NoError(t, errReq)
+
+		rr := httptest.NewRecorder()
+
+		if len(test.httpPathParams) > 0 {
+			req = mux.SetURLVars(req, test.httpPathParams)
+		}
+
+		handler := test.handlerFunc(portsHandler)
+
+		handler.ServeHTTP(rr, req)
+
+		assert.Equal(t, test.expectedResponseCode, rr.Code)
+
+		verifyExpectedResponse(t, ja, test.expectedResponse, test.expectedResponseFileName, rr)
+	}
+}
+
+func TestPortsHandlerErroneousResponses(t *testing.T) {
+	var testData = []tests{
+		{
+			testCaseName: "should return a validation error for a missing 'id' param " +
+				"in the request body when creating a new port",
+			httpMethod:   "POST",
+			httpEndpoint: handlers.EndpointCreateOrUpdatePort,
+			httpRequestBody: `
+			{
+				"name": "Newest Port",
+				"coordinates": [
+				  123.321,
+				  43.34
+				],
+				"city": "Some City",
+				"country": "Some Country",
+				"alias": [],
+				"regions": [],
+				"timezone": "My/Timezone",
+				"unlocs": [
+				  "NEWPORT"
+				]
+			}`,
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.CreateOrUpdatePort()
+			},
+			expectedResponseCode: http.StatusBadRequest,
+			expectedResponse: `
+			{
+				"status": 400,
+				"error": "required body param 'id' is missing"
+			}`,
+		},
+		{
+			testCaseName: "should return a request body unmarshal error when creating a new port",
+			httpMethod:   "POST",
+			httpEndpoint: handlers.EndpointCreateOrUpdatePort,
+			httpRequestBody: `
+			{
+				"name": "Newest Port"
+				"coordinates": [
+				  123.321,
+				  43.34
+				],
+				"city": "Some City",
+				"country": "Some Country",
+				"alias": [],
+				"regions": [],
+				"timezone": "My/Timezone",
+				"unlocs": [
+				  "NEWPORT"
+				]
+			}`,
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.CreateOrUpdatePort()
+			},
+			expectedResponseCode: http.StatusBadRequest,
+			expectedResponse: `
+			{
+				"status": 400,
+				"error": "could not unmarshal request params: invalid character '\"' after object key:value pair"
+			}`,
+		},
+		{
+			testCaseName: "should return a validation error for a missing 'id' path param when querying a port by ID",
+			httpMethod:   "GET",
+			httpEndpoint: handlers.EndpointGetPortByID,
+			handlerFunc: func(portsHandler *handlers.PortsHandler) http.HandlerFunc {
+				return portsHandler.GetPort()
+			},
+			expectedResponseCode: http.StatusBadRequest,
+			expectedResponse: `
+			{
+			   "status": 400,
+			   "error": "required path param 'id' is missing"
+			}`,
+		},
+	}
+
+	ja := jsonassert.New(t)
+
+	for _, test := range testData {
+		t.Log(test.testCaseName)
+
 		portsHandler := setupHandler(t)
 
 		var reqBody io.Reader
