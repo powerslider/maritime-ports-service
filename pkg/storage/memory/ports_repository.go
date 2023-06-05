@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"sync"
 
-	pkgErrors "github.com/pkg/errors"
+	"github.com/powerslider/maritime-ports-service/pkg/portsmanaging"
 
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
+	pkgErrors "github.com/pkg/errors"
 )
 
 // PortsRepository holds the CRUD db operations for CasinoRoundBet.
@@ -23,8 +23,8 @@ func NewPortsRepository() *PortsRepository {
 	}
 }
 
-// UpsertPort inserts a new entity.Port entity.
-func (r *PortsRepository) UpsertPort(port *entity.Port) (*entity.Port, bool, error) {
+// UpsertPort inserts or modifies a new/existing portsmanaging.MaritimePort entity.
+func (r *PortsRepository) UpsertPort(port *portsmanaging.MaritimePort) (*portsmanaging.MaritimePort, bool, error) {
 	p, loaded := r.store.LoadOrStore(port.ID, port)
 
 	if loaded {
@@ -36,7 +36,7 @@ func (r *PortsRepository) UpsertPort(port *entity.Port) (*entity.Port, bool, err
 				err, "error: failed update of existing port with ID '%s'", port.ID)
 		}
 
-		updatedPort, ok := p.(*entity.Port)
+		updatedPort, ok := p.(*portsmanaging.MaritimePort)
 		if !ok {
 			return nil, loaded, fmt.Errorf("error: updated port entry is corrupt: %s", fmt.Sprint(p))
 		}
@@ -46,17 +46,17 @@ func (r *PortsRepository) UpsertPort(port *entity.Port) (*entity.Port, bool, err
 		return updatedPort, loaded, nil
 	}
 
-	return p.(*entity.Port), loaded, nil
+	return p.(*portsmanaging.MaritimePort), loaded, nil
 }
 
-// GetAllPorts returns all available ports from type entity.Port.
-func (r *PortsRepository) GetAllPorts() ([]*entity.Port, error) {
+// GetAllPorts returns all available ports from type portsmanaging.MaritimePort.
+func (r *PortsRepository) GetAllPorts() ([]*portsmanaging.MaritimePort, error) {
 	var err error
 
-	pp := make([]*entity.Port, 0)
+	pp := make([]*portsmanaging.MaritimePort, 0)
 
 	r.store.Range(func(key, value any) bool {
-		p, ok := value.(*entity.Port)
+		p, ok := value.(*portsmanaging.MaritimePort)
 		if ok {
 			pp = append(pp, p)
 		} else {
@@ -69,11 +69,11 @@ func (r *PortsRepository) GetAllPorts() ([]*entity.Port, error) {
 	return pp, err
 }
 
-// GetPortByID returns an entity.Port identified by an available ID.
-func (r *PortsRepository) GetPortByID(id string) (*entity.Port, error) {
+// GetPortByID returns n portsmanaging.MaritimePort identified by an available ID.
+func (r *PortsRepository) GetPortByID(id string) (*portsmanaging.MaritimePort, error) {
 	v, loaded := r.store.Load(id)
 	if loaded {
-		p, ok := v.(*entity.Port)
+		p, ok := v.(*portsmanaging.MaritimePort)
 		if ok {
 			return p, nil
 		}

@@ -9,8 +9,6 @@ import (
 	"path/filepath"
 
 	pkgErrors "github.com/pkg/errors"
-
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
 )
 
 // JSONLoader is a service responsible for loading json data.
@@ -61,7 +59,7 @@ func (l *JSONLoader) Load(r io.Reader) error {
 			return pkgErrors.WithStack(err)
 		}
 
-		var p entity.Port
+		var p MaritimePort
 
 		err = dec.Decode(&p)
 		if err != nil {

@@ -5,15 +5,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
-
 	"github.com/stretchr/testify/require"
 
 	"github.com/powerslider/maritime-ports-service/pkg/portsmanaging"
 	"github.com/powerslider/maritime-ports-service/pkg/storage/memory"
 )
 
-var expectedPorts = map[string]*entity.Port{
+var expectedPorts = map[string]*portsmanaging.MaritimePort{
 	"AEAJM": {
 		ID:          "AEAJM",
 		Name:        "Ajman",
