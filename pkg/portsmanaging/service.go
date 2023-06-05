@@ -1,8 +1,6 @@
 package portsmanaging
 
-import (
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
-)
+import "github.com/powerslider/maritime-ports-service/pkg/entity"
 
 // Service represents execution of business logic upon entity.Port.
 type Service struct {

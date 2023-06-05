@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"sync"
 
-	pkgErrors "github.com/pkg/errors"
-
 	"github.com/powerslider/maritime-ports-service/pkg/entity"
+
+	pkgErrors "github.com/pkg/errors"
 )
 
 // PortsRepository holds the CRUD db operations for CasinoRoundBet.

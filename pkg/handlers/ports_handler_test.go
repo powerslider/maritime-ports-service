@@ -37,6 +37,8 @@ type tests struct {
 }
 
 func TestPortsHandlerCorrectResponses(t *testing.T) {
+	t.Parallel()
+
 	var testData = []tests{
 		{
 			testCaseName: "should return a correct response for getting all ports",
@@ -156,36 +158,42 @@ func TestPortsHandlerCorrectResponses(t *testing.T) {
 	ja := jsonassert.New(t)
 
 	for _, test := range testData {
-		t.Log(test.testCaseName)
+		capturedTest := test
 
-		portsHandler := setupHandler(t)
+		t.Run(capturedTest.testCaseName, func(t *testing.T) {
+			t.Parallel()
 
-		var reqBody io.Reader
+			portsHandler := setupHandler(t)
 
-		if len(test.httpRequestBody) > 0 {
-			reqBody = bytes.NewBuffer([]byte(test.httpRequestBody))
-		}
+			var reqBody io.Reader
 
-		req, errReq := http.NewRequest(test.httpMethod, test.httpEndpoint, reqBody)
-		require.NoError(t, errReq)
+			if len(capturedTest.httpRequestBody) > 0 {
+				reqBody = bytes.NewBuffer([]byte(capturedTest.httpRequestBody))
+			}
 
-		rr := httptest.NewRecorder()
+			req, errReq := http.NewRequest(capturedTest.httpMethod, capturedTest.httpEndpoint, reqBody)
+			require.NoError(t, errReq)
 
-		if len(test.httpPathParams) > 0 {
-			req = mux.SetURLVars(req, test.httpPathParams)
-		}
+			rr := httptest.NewRecorder()
 
-		handler := test.handlerFunc(portsHandler)
+			if len(capturedTest.httpPathParams) > 0 {
+				req = mux.SetURLVars(req, capturedTest.httpPathParams)
+			}
 
-		handler.ServeHTTP(rr, req)
+			handler := capturedTest.handlerFunc(portsHandler)
 
-		assert.Equal(t, test.expectedResponseCode, rr.Code)
+			handler.ServeHTTP(rr, req)
 
-		verifyExpectedResponse(t, ja, test.expectedResponse, test.expectedResponseFileName, rr)
+			assert.Equal(t, capturedTest.expectedResponseCode, rr.Code)
+
+			verifyExpectedResponse(t, ja, capturedTest.expectedResponse, capturedTest.expectedResponseFileName, rr)
+		})
 	}
 }
 
 func TestPortsHandlerErroneousResponses(t *testing.T) {
+	t.Parallel()
+
 	var testData = []tests{
 		{
 			testCaseName: "should return a validation error for a missing 'id' param " +
@@ -267,32 +275,36 @@ func TestPortsHandlerErroneousResponses(t *testing.T) {
 	ja := jsonassert.New(t)
 
 	for _, test := range testData {
-		t.Log(test.testCaseName)
+		capturedTest := test
 
-		portsHandler := setupHandler(t)
+		t.Run(capturedTest.testCaseName, func(t *testing.T) {
+			t.Parallel()
 
-		var reqBody io.Reader
+			portsHandler := setupHandler(t)
 
-		if len(test.httpRequestBody) > 0 {
-			reqBody = bytes.NewBuffer([]byte(test.httpRequestBody))
-		}
+			var reqBody io.Reader
 
-		req, errReq := http.NewRequest(test.httpMethod, test.httpEndpoint, reqBody)
-		require.NoError(t, errReq)
+			if len(capturedTest.httpRequestBody) > 0 {
+				reqBody = bytes.NewBuffer([]byte(capturedTest.httpRequestBody))
+			}
 
-		rr := httptest.NewRecorder()
+			req, errReq := http.NewRequest(capturedTest.httpMethod, capturedTest.httpEndpoint, reqBody)
+			require.NoError(t, errReq)
 
-		if len(test.httpPathParams) > 0 {
-			req = mux.SetURLVars(req, test.httpPathParams)
-		}
+			rr := httptest.NewRecorder()
 
-		handler := test.handlerFunc(portsHandler)
+			if len(capturedTest.httpPathParams) > 0 {
+				req = mux.SetURLVars(req, capturedTest.httpPathParams)
+			}
 
-		handler.ServeHTTP(rr, req)
+			handler := capturedTest.handlerFunc(portsHandler)
 
-		assert.Equal(t, test.expectedResponseCode, rr.Code)
+			handler.ServeHTTP(rr, req)
 
-		verifyExpectedResponse(t, ja, test.expectedResponse, test.expectedResponseFileName, rr)
+			assert.Equal(t, capturedTest.expectedResponseCode, rr.Code)
+
+			verifyExpectedResponse(t, ja, capturedTest.expectedResponse, capturedTest.expectedResponseFileName, rr)
+		})
 	}
 }
 

@@ -7,10 +7,10 @@ import (
 	"io"
 	"net/http"
 
-	pkgErrors "github.com/pkg/errors"
 	"github.com/powerslider/maritime-ports-service/pkg/entity"
 
 	"github.com/gorilla/mux"
+	pkgErrors "github.com/pkg/errors"
 )
 
 // PortsService is a port interface for operations on entity.Port.

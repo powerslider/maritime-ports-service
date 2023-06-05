@@ -8,9 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	pkgErrors "github.com/pkg/errors"
-
 	"github.com/powerslider/maritime-ports-service/pkg/entity"
+
+	pkgErrors "github.com/pkg/errors"
 )
 
 // JSONLoader is a service responsible for loading json data.
