@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  entity.Port:
+  portsmanaging.MaritimePort:
     properties:
       alias:
         items:
@@ -62,12 +62,12 @@ paths:
       - application/json
       description: Create a new port or update an existing one.
       parameters:
-      - description: Port Entry
+      - description: MaritimePort Entry
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/entity.Port'
+          $ref: '#/definitions/portsmanaging.MaritimePort'
       produces:
       - application/json
       responses: {}
@@ -80,7 +80,7 @@ paths:
       - application/json
       description: Get an existing port by ID.
       parameters:
-      - description: Port ID
+      - description: MaritimePort ID
         in: path
         name: id
         required: true

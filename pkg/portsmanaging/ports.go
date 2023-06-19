@@ -1,14 +1,13 @@
 package portsmanaging
 
-import "github.com/powerslider/maritime-ports-service/pkg/entity"
-
-// PortsStore is a port interface representing operations on entity.Port entity.
+// PortsStore is a port interface representing operations on portsmanaging.MaritimePort entity.
 type PortsStore interface {
-	UpsertPort(port *entity.Port) (*entity.Port, bool, error)
+	// UpsertPort inserts or modifies a new/existing portsmanaging.MaritimePort entity.
+	UpsertPort(port *MaritimePort) (*MaritimePort, bool, error)
 
-	// GetAllPorts returns all available ports from type entity.Port.
-	GetAllPorts() ([]*entity.Port, error)
+	// GetAllPorts returns all available ports from type portsmanaging.MaritimePort.
+	GetAllPorts() ([]*MaritimePort, error)
 
-	// GetPortByID returns an entity.Port identified by an available ID.
-	GetPortByID(id string) (*entity.Port, error)
+	// GetPortByID returns n portsmanaging.MaritimePort identified by an available ID.
+	GetPortByID(id string) (*MaritimePort, error)
 }

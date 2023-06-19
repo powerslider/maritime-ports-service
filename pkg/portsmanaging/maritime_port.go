@@ -1,7 +1,7 @@
-package entity
+package portsmanaging
 
-// Port represents a maritime port.
-type Port struct {
+// MaritimePort represents a maritime port.
+type MaritimePort struct {
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`
 	City        string    `json:"city"`
