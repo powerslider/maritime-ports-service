@@ -53,12 +53,12 @@ const docTemplate = `{
                 "summary": "Create a new port or update an existing one.",
                 "parameters": [
                     {
-                        "description": "Port Entry",
+                        "description": "MaritimePort Entry",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.Port"
+                            "$ref": "#/definitions/portsmanaging.MaritimePort"
                         }
                     }
                 ],
@@ -81,7 +81,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Port ID",
+                        "description": "MaritimePort ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -92,7 +92,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entity.Port": {
+        "portsmanaging.MaritimePort": {
             "type": "object",
             "properties": {
                 "alias": {

@@ -7,17 +7,18 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
+
+	"github.com/powerslider/maritime-ports-service/pkg/portsmanaging"
 
 	"github.com/gorilla/mux"
 	pkgErrors "github.com/pkg/errors"
 )
 
-// PortsService is a port interface for operations on entity.Port.
+// PortsService is a port interface for operations on portsmanaging.MaritimePort.
 type PortsService interface {
-	GetAllPorts() ([]*entity.Port, error)
-	GetPortByID(ID string) (*entity.Port, error)
-	CreateOrUpdatePort(p *entity.Port) (*entity.Port, bool, error)
+	GetAllPorts() ([]*portsmanaging.MaritimePort, error)
+	GetPortByID(ID string) (*portsmanaging.MaritimePort, error)
+	CreateOrUpdatePort(p *portsmanaging.MaritimePort) (*portsmanaging.MaritimePort, bool, error)
 }
 
 // PortsHandler represents an HTTP handler for Ethereum block operations.
@@ -41,7 +42,7 @@ func NewPortsHandler(service PortsService) *PortsHandler {
 // @Router /api/v1/ports [get]
 func (h *PortsHandler) GetAllPorts() http.HandlerFunc {
 	type response struct {
-		Result []*entity.Port `json:"result"`
+		Result []*portsmanaging.MaritimePort `json:"result"`
 	}
 
 	return func(rw http.ResponseWriter, r *http.Request) {
@@ -67,11 +68,11 @@ func (h *PortsHandler) GetAllPorts() http.HandlerFunc {
 // @Tags ports
 // @Accept  json
 // @Produce  json
-// @Param id path string true "Port ID"
+// @Param id path string true "MaritimePort ID"
 // @Router /api/v1/ports/{id} [get]
 func (h *PortsHandler) GetPort() http.HandlerFunc {
 	type response struct {
-		Result *entity.Port `json:"result"`
+		Result *portsmanaging.MaritimePort `json:"result"`
 	}
 
 	return func(rw http.ResponseWriter, r *http.Request) {
@@ -118,7 +119,7 @@ func (h *PortsHandler) GetPort() http.HandlerFunc {
 // @Tags ports
 // @Accept  json
 // @Produce  json
-// @Param request body entity.Port true "Port Entry"
+// @Param request body portsmanaging.MaritimePort true "MaritimePort Entry"
 // @Router /api/v1/ports [post]
 func (h *PortsHandler) CreateOrUpdatePort() http.HandlerFunc {
 	type response struct {
@@ -128,7 +129,7 @@ func (h *PortsHandler) CreateOrUpdatePort() http.HandlerFunc {
 	}
 
 	return func(rw http.ResponseWriter, r *http.Request) {
-		var reqBody entity.Port
+		var reqBody portsmanaging.MaritimePort
 
 		reqBytes, errReqBytes := io.ReadAll(r.Body)
 		errReqUnmarshal := json.Unmarshal(reqBytes, &reqBody)

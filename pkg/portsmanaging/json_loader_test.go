@@ -3,8 +3,6 @@ package portsmanaging_test
 import (
 	"testing"
 
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
-
 	"github.com/stretchr/testify/assert"
 
 	"github.com/stretchr/testify/require"
@@ -13,7 +11,7 @@ import (
 	"github.com/powerslider/maritime-ports-service/pkg/storage/memory"
 )
 
-var expectedPorts = map[string]*entity.Port{
+var expectedPorts = map[string]*portsmanaging.MaritimePort{
 	"AEAJM": {
 		ID:          "AEAJM",
 		Name:        "Ajman",

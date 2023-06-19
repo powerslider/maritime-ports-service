@@ -8,8 +8,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/powerslider/maritime-ports-service/pkg/entity"
-
 	pkgErrors "github.com/pkg/errors"
 )
 
@@ -61,7 +59,7 @@ func (l *JSONLoader) Load(r io.Reader) error {
 			return pkgErrors.WithStack(err)
 		}
 
-		var p entity.Port
+		var p MaritimePort
 
 		err = dec.Decode(&p)
 		if err != nil {
