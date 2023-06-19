@@ -37,10 +37,19 @@ test:
 	@echo ">>> Running Unit Tests..."
 	go test -v -race ./...
 
+.PHONY: test-no-cache
+test-no-cache:
+	@echo ">>> Running Unit Tests without Caching..."
+	go test -v -count=1 -race ./...
+
 .PHONY: cover-test
 cover-test:
 	@echo ">>> Running Tests with Coverage..."
-	go test -v -race ./... -coverprofile=coverage.txt -covermode=atomic
+	go test -v -race ./... -coverprofile=coverage.out -covermode=atomic
+
+.PHONY: show-cover
+show-cover:
+	@go tool cover -html=coverage.out
 
 .PHONY: build-server
 build-server:

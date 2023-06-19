@@ -54,16 +54,20 @@ var expectedPorts = map[string]*portsmanaging.MaritimePort{
 }
 
 func TestJSONLoader(t *testing.T) {
-	portsStore := memory.NewPortsRepository()
-	loader := portsmanaging.NewJSONLoader(portsStore)
+	t.Parallel()
 
-	err := loader.LoadJSONFile("../../testdata/test_data_ports.json")
-	require.NoError(t, err)
+	t.Run("should load JSON data properly", func(t *testing.T) {
+		portsStore := memory.NewPortsRepository()
+		loader := portsmanaging.NewJSONLoader(portsStore)
 
-	storedPorts, err := portsStore.GetAllPorts()
-	require.NoError(t, err)
+		err := loader.LoadJSONFile("../../testdata/test_data_ports.json")
+		require.NoError(t, err)
 
-	for _, port := range storedPorts {
-		assert.Equal(t, port, expectedPorts[port.ID])
-	}
+		storedPorts, err := portsStore.GetAllPorts()
+		require.NoError(t, err)
+
+		for _, port := range storedPorts {
+			assert.Equal(t, port, expectedPorts[port.ID])
+		}
+	})
 }
